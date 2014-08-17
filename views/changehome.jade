@@ -1,0 +1,12 @@
+extends skeleton
+block content
+	h1 Gerrit change lookup
+	div.row
+		div.col-md-7
+			form(action="/c",required,method="post")
+				p Enter a Gerrit change below.
+				div.input-group.input-group-lg
+					input(name="change",type="tel",required,placeholder="154321").form-control
+					span.input-group-btn
+						input(type="submit",value="View change").btn.btn-success
+			+flash

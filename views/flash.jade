@@ -1,0 +1,9 @@
+mixin flash
+	if messages
+		ul.flash.list-group
+			if messages.err
+				li.list-group-item.text-danger
+					span #{messages.err}
+			if messages.success
+				li.list-group-item.text-success
+					span #{messages.success}

@@ -8,5 +8,6 @@ app.use( function ( req, res ) {
 app.use( function ( err, req, res, next ) {
 	res.status( 500 );
 	res.send( '500: Something went wrong.' );
+	console.error( err.stack );
 	next;
 } );
