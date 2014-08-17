@@ -1,0 +1,147 @@
+extends skeleton
+block navbar-content
+	div.navbar-right
+		ul.navbar-nav.nav
+			li.text-right
+				a(href="?purge=true")
+					if data._fresh
+						span Viewing fresh data.
+					else
+						span Data cached from #{data._age}.
+					br
+					i.fa.fa-refresh &nbsp;
+					span Click here to refresh.
+
+block content
+	div.row
+		div.col-md-8
+			h1
+				span #{data.subject}
+				a.small(href="//gerrit.wikimedia.org/r/#/c/"+data._number) &nbsp;c#{data._number}
+		div.col-md-4
+			div.status
+				if data.status == 'MERGED'
+					div.panel.panel-success
+						div.panel-heading
+							i.fa.fa-star &nbsp;
+							span Merged
+				else if data.status == 'ABANDONED'
+					div.panel.panel-danger
+						div.panel-heading
+							i.fa.fa-trash-o &nbsp;
+							span Abandoned
+				else if data.labels["Code-Review"].rejected
+					div.panel.panel-danger
+						div.panel-heading
+							i.fa.fa-times &nbsp;
+							span Rejected
+				else if data.labels["Code-Review"].approved
+					div.panel.panel-info
+						div.panel-heading
+							i.fa.fa-tick &nbsp;
+							span Approved
+				else if data.labels["Code-Review"].disliked
+					- pending = true
+					div.panel.panel-warning
+						div.panel-heading
+							i.fa.fa-warning &nbsp;
+							span Disliked
+				else if data.labels.Verified.rejected
+					div.panel.panel-warning
+						div.panel-heading
+							i.fa.fa-cog &nbsp;
+							span Fails
+				else if data.labels["Code-Review"].recommended
+					- pending = true
+					div.panel.panel-primary
+						div.panel-heading
+							i.fa.fa-thumbs-up &nbsp;
+							span Recommended
+				else if data.status == 'DRAFT'
+					div.panel.panel-default
+						div.panel-heading
+							i.fa.fa-file-text &nbsp;
+							span Draft
+				else
+					- pending = true
+					div.panel.panel-info
+						div.panel-heading
+							i.fa.fa-comments &nbsp;
+							span Waiting
+	div.row
+		div.col-md-8
+			table.table
+				tr
+					th Project:
+					- proj = data.project.split( '/' )
+					if proj[0] == 'mediawiki'
+						if proj[1] == 'core'
+							td
+								a(href="//mediawiki.org") #{data.project}
+						else if proj[1] == 'extensions'
+							td
+								a(href="//mediawiki.org/wiki/Extension:" + proj[2]) #{data.project}
+						else
+							td #{data.project}
+					else
+						td #{data.project}
+				tr
+					th Owner:
+					td
+						a(href="/u/"+data.owner.name) #{data.owner.name}
+				tr
+					if pending
+						th Waiting since:
+					else
+						th Created:
+					td #{moment( data.created ).fromNow()}
+				tr
+					th Last updated:
+					td #{moment( data.updated ).fromNow()}
+				tr
+					th Comments:
+					td #{data.messages.length}
+				tr
+					th Mergeable:
+					td
+						if data.mergeable
+							i.fa.fa-check &nbsp;
+							span Mergeable
+						else
+							i.fa.fa-times &nbsp;
+							span Not Mergeable
+				tr
+					th Change-ID:
+					td: code #{data.change_id}
+		div.col-md-4
+			each label in data.labels
+				table.table
+					if !data[label]
+						tr
+							td(colspan="2").text-center.text-muted No #{label}
+					else
+						th(colspan="2").text-center #{label}
+						- cr = data.labels[label].values
+						each rating in data.labels[label].all
+							tr
+								td #{rating.name}
+								if rating.value == -2
+									td.danger.text-danger
+										i.fa.fa-times.fa-fw &nbsp;
+										abbr(title=cr[-2]) Rejected
+								else if rating.value == 2
+									td.success.text-success
+										i.fa.fa-check.fa-fw &nbsp;
+										abbr(title=cr[2]) Approved
+								else if rating.value == -1
+									td.warning.text-warning
+										i.fa.fa-thumbs-down.fa-fw &nbsp;
+										abbr(title=cr[-1]) Disliked
+								else if rating.value == 1
+									td.info.text-info
+										i.fa.fa-thumbs-up.fa-fw &nbsp;
+										abbr(title=cr[1]) Recommended
+								else if rating.value == 0
+									td.muted.text-muted
+										i.fa.fa-circle-o.fa-fw &nbsp;
+										abbr(title=cr[0]) Pending

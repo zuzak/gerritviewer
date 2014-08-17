@@ -4,9 +4,9 @@ block content
 	div.row
 		div.col-md-7
 			form(action="/c",required,method="post")
-				p Enter a Gerrit change below.
+				p Enter a Gerrit change ID or number below.
 				div.input-group.input-group-lg
-					input(name="change",type="tel",required,placeholder="154321").form-control
+					input(name="change",type="tel",required,placeholder="154321 or I4659a3c715f…").form-control
 					span.input-group-btn
 						input(type="submit",value="View change").btn.btn-success
 			+flash
