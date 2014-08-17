@@ -1,0 +1,14 @@
+{
+  "name": "gerrittool",
+  "version": "0.0.0",
+  "private": true,
+  "main": "server.js",
+  "devDependencies": {
+    "jshint": "~2.5.3",
+    "precommit-hook": "~1.0.7"
+  },
+  "dependencies": {
+    "express": "~4.8.4",
+    "convict": "~0.4.2"
+  }
+}
