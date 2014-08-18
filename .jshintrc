@@ -6,7 +6,6 @@
 	"eqeqeq": true,
 	"freeze": true,
 	"latedef": true,
-	"maxlen": 100,
 	"noarg": true,
 	"nonew": true,
 	"quotmark": "single",
