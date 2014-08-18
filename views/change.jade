@@ -88,7 +88,9 @@ block content
 				tr
 					th Owner:
 					td
-						a(href="/u/"+data.owner.name) #{data.owner.name}
+						a(href="/u/"+data.owner.name)
+							img(src=gravatar( data.owner.email ))
+							span &nbsp; #{data.owner.name}
 				tr
 					if pending
 						th Waiting since:
@@ -123,7 +125,10 @@ block content
 					- cr = data.labels['Code-Review'].values
 					each rating in data.labels['Code-Review'].all
 						tr
-							td #{rating.name}
+							td
+								a(href="/u/"+rating.name)
+									img(src=gravatar(rating.email))
+									span &nbsp; #{rating.name}
 							if rating.value == -2
 								td.danger.text-danger
 									i.fa.fa-times.fa-fw &nbsp;
@@ -153,22 +158,41 @@ block content
 					each rating in data.labels['Verified'].all
 						tr
 							if rating.value == -2
-								td #{rating.name}
+								td
+									a(href="/u/"+rating.name)
+										img(src=gravatar(rating.email))
+										span &nbsp; #{rating.name}
 								td.danger.text-danger
 									i.fa.fa-times.fa-fw &nbsp;
-									abbr(title=cr[-2]) Rejected
+									abbr(title=cr[-2]) Vetoed
 							else if rating.value == 2
-								td #{rating.name}
+								td
+									a(href="/u/"+rating.name)
+										img(src=gravatar(rating.email))
+										span &nbsp; #{rating.name}
 								td.success.text-success
 									i.fa.fa-check.fa-fw &nbsp;
-									abbr(title=cr[2]) Approved
+									abbr(title=cr[2]) Verified
 							else if rating.value == -1
-								td #{rating.name}
+								td
+									a(href="/u/"+rating.name)
+										img(src=gravatar(rating.email))
+										span &nbsp; #{rating.name}
 								td.warning.text-warning
 									i.fa.fa-thumbs-down.fa-fw &nbsp;
-									abbr(title=cr[-1]) Disliked
+									abbr(title=cr[-1]) Fails
 							else if rating.value == 1
-								td #{rating.name}
+								td
+									a(href="/u/"+rating.name)
+										img(src=gravatar(rating.email))
+										span &nbsp; #{rating.name}
 								td.info.text-info
 									i.fa.fa-thumbs-up.fa-fw &nbsp;
-									abbr(title=cr[1]) Recommended
+									abbr(title=cr[1]) Checked
+			pre.
+				git checkout #{data.branch}
+				git pull --rebase
+				git review --download #{data._number}
+			pre.
+				git commit --all --amend
+				git review --no-rebase

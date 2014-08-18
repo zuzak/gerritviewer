@@ -9,5 +9,5 @@ app.use( function ( err, req, res, next ) {
 	res.status( 500 );
 	res.set( 'Content-Type', 'text/plain' );
 	res.send( err.stack );
-	next;
+	next();
 } );

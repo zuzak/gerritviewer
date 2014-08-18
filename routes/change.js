@@ -1,6 +1,7 @@
 var app = require( '../' );
 var request = require( 'request' );
 var moment = require( 'moment' );
+var gravatar = require( 'grvtr' );
 var fs = require( 'fs' );
 
 app.get( '/c', function ( req, res ) {
@@ -35,6 +36,19 @@ app.post( '/c', function ( req, res ) {
 	}
 } );
 
+function render( res, data ) {
+	res.render( 'change', {
+		data: data,
+		gravatar: function ( url ) {
+			return gravatar.create( url, {
+				size: 20,
+				defaultImage: 'blank'
+			} );
+		},
+		moment: moment,
+	} );
+}
+
 app.get( '/c/:change', function ( req, res ) {
 	if ( req.query.purge || !fs.existsSync( 'cache/' + req.params.change + '.json' ) ) {
 		request( 'https://gerrit.wikimedia.org/r/changes/' + req.params.change + '/detail', function ( err, resp, body ) {
@@ -48,7 +62,7 @@ app.get( '/c/:change', function ( req, res ) {
 				data._fresh = false;
 				fs.writeFile( 'cache/' +  req.params.change + '.json', JSON.stringify( data ) );
 				data._fresh = true;
-				res.render( 'change', { data: data, locals: { moment: moment } } );
+				render( res, data );
 			}
 		} );
 	} else {
@@ -57,9 +71,9 @@ app.get( '/c/:change', function ( req, res ) {
 				res.send( 'not able to read cache' );
 			}
 			data = JSON.parse( data );
-			console.log( data.labels );
 			data._age = moment( data._timestamp ).fromNow();
-			res.render( 'change', { data: data, locals: { moment: moment } } );
+			render( res, data );
 		} );
 	}
 } );
+
