@@ -77,3 +77,14 @@ app.get( '/c/:change', function ( req, res ) {
 	}
 } );
 
+app.get( '/c/:change/json', function ( req, res ) {
+	fs.readFile( 'cache/' + req.params.change + '.json', { encoding: 'utf-8' }, function ( err, data ) {
+		if ( err ) {
+			res.send( '{"error":"not cached, use Gerrit directly"}'  );
+		}
+		data = JSON.parse( data );
+		res.json( data );
+	} );
+} );
+
+

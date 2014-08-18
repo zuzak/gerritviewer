@@ -18,6 +18,7 @@ app.use( session( {
 } ) );
 app.use( flash() );
 
+app.set( 'json spaces', 4 );
 require( './routes' );
 
 app.listen( config.get( 'web.port' ) );

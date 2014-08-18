@@ -14,11 +14,11 @@ block navbar-content
 
 block content
 	div.row
-		div.col-md-8
+		div.col-md-8.col-sm-8
 			h1
 				span #{data.subject}
 				a.small(href="//gerrit.wikimedia.org/r/#/c/"+data._number) &nbsp;c#{data._number}
-		div.col-md-4
+		div.col-md-4.col-sm-4
 			div.status
 				if data.status == 'MERGED'
 					div.panel.panel-success
@@ -116,83 +116,114 @@ block content
 					th Change-ID:
 					td: code #{data.change_id}
 		div.col-md-4
-			table.table
-				if !data.labels['Code-Review']
-					tr
-						td(colspan="2").text-center.text-muted No Code-Review
-				else
-					th(colspan="2").text-center Code-Review
-					- cr = data.labels['Code-Review'].values
-					each rating in data.labels['Code-Review'].all
-						tr
-							td
-								a(href="/u/"+rating.name)
-									img(src=gravatar(rating.email))
-									span &nbsp; #{rating.name}
-							if rating.value == -2
-								td.danger.text-danger
-									i.fa.fa-times.fa-fw &nbsp;
-									strong: abbr(title=cr[-2]) Rejected
-							else if rating.value == 2
-								td.success.text-success
-									i.fa.fa-check.fa-fw &nbsp;
-									strong: abbr(title=cr['+2']) Approved
-							else if rating.value == -1
-								td.warning.text-warning
-									i.fa.fa-thumbs-down.fa-fw &nbsp;
-									abbr(title=cr[-1]) Disliked
-							else if rating.value == 1
-								td.info.text-info
-									i.fa.fa-thumbs-up.fa-fw &nbsp;
-									abbr(title=cr['+1']) Recommended
-							else if rating.value == 0
-								td.muted.text-muted
-									i.fa.fa-circle-o.fa-fw &nbsp;
-									abbr(title=cr[' 0']) Pending
-				if !data.labels ['Verified']
-					tr
-						td(colspan="2").text-center.text-muted No Verification
-				else
-					th(colspan="2").text-center Verification
-					- cr = data.labels['Verified'].values
-					each rating in data.labels['Verified'].all
-						tr
-							if rating.value == -2
-								td
-									a(href="/u/"+rating.name)
-										img(src=gravatar(rating.email))
-										span &nbsp; #{rating.name}
-								td.danger.text-danger
-									i.fa.fa-times.fa-fw &nbsp;
-									abbr(title=cr[-2]) Vetoed
-							else if rating.value == 2
-								td
-									a(href="/u/"+rating.name)
-										img(src=gravatar(rating.email))
-										span &nbsp; #{rating.name}
-								td.success.text-success
-									i.fa.fa-check.fa-fw &nbsp;
-									abbr(title=cr[2]) Verified
-							else if rating.value == -1
-								td
-									a(href="/u/"+rating.name)
-										img(src=gravatar(rating.email))
-										span &nbsp; #{rating.name}
-								td.warning.text-warning
-									i.fa.fa-thumbs-down.fa-fw &nbsp;
-									abbr(title=cr[-1]) Fails
-							else if rating.value == 1
-								td
-									a(href="/u/"+rating.name)
-										img(src=gravatar(rating.email))
-										span &nbsp; #{rating.name}
-								td.info.text-info
-									i.fa.fa-thumbs-up.fa-fw &nbsp;
-									abbr(title=cr[1]) Checked
-			pre.
-				git checkout #{data.branch}
-				git pull --rebase
-				git review --download #{data._number}
-			pre.
-				git commit --all --amend
-				git review --no-rebase
+			div.row
+				div.col-md-12.col-sm-6
+					table.table
+						if !data.labels['Code-Review']
+							tr
+								td(colspan="2").text-center.text-muted No Code-Review
+						else
+							th(colspan="2").text-center Code-Review
+							- cr = data.labels['Code-Review'].values
+							each rating in data.labels['Code-Review'].all
+								tr
+									td
+										a(href="/u/"+rating.name)
+											img(src=gravatar(rating.email))
+											span &nbsp; #{rating.name}
+									if rating.value == -2
+										td.danger.text-danger
+											i.fa.fa-times.fa-fw &nbsp;
+											strong: abbr(title=cr[-2]) Rejected
+									else if rating.value == 2
+										td.success.text-success
+											i.fa.fa-check.fa-fw &nbsp;
+											strong: abbr(title=cr['+2']) Approved
+									else if rating.value == -1
+										td.warning.text-warning
+											i.fa.fa-thumbs-down.fa-fw &nbsp;
+											abbr(title=cr[-1]) Disliked
+									else if rating.value == 1
+										td.info.text-info
+											i.fa.fa-thumbs-up.fa-fw &nbsp;
+											abbr(title=cr['+1']) Recommended
+									else if rating.value == 0
+										td.muted.text-muted
+											i.fa.fa-circle-o.fa-fw &nbsp;
+											abbr(title=cr[' 0']) Pending
+				div.col-md-12.col-sm-6
+					table.table
+						if !data.labels ['Verified']
+							tr
+								td(colspan="2").text-center.text-muted No Verification
+						else
+							th(colspan="2").text-center Verification
+							- cr = data.labels['Verified'].values
+							each rating in data.labels['Verified'].all
+								tr
+									if rating.value == -2
+										td
+											a(href="/u/"+rating.name)
+												img(src=gravatar(rating.email))
+												span &nbsp; #{rating.name}
+										td.danger.text-danger
+											i.fa.fa-times.fa-fw &nbsp;
+											abbr(title=cr[-2]) Vetoed
+									else if rating.value == 2
+										td
+											a(href="/u/"+rating.name)
+												img(src=gravatar(rating.email))
+												span &nbsp; #{rating.name}
+										td.success.text-success
+											i.fa.fa-check.fa-fw &nbsp;
+											abbr(title=cr[2]) Verified
+									else if rating.value == -1
+										td
+											a(href="/u/"+rating.name)
+												img(src=gravatar(rating.email))
+												span &nbsp; #{rating.name}
+										td.warning.text-warning
+											i.fa.fa-thumbs-down.fa-fw &nbsp;
+											abbr(title=cr[-1]) Fails
+									else if rating.value == 1
+										td
+											a(href="/u/"+rating.name)
+												img(src=gravatar(rating.email))
+												span &nbsp; #{rating.name}
+										td.info.text-info
+											i.fa.fa-thumbs-up.fa-fw &nbsp;
+											abbr(title=cr[1]) Checked
+	div.row
+		div.col-md-8
+			- max = 0
+			each comment in data.messages
+				- if ( comment._revision_number > max ) {
+				-	max = comment._revision_number
+				- }
+			each comment in data.messages
+				- if ( comment._revision_number == max ) {
+				-	cls = 'info'
+				- } else {
+				-	cls = 'default'
+				- }
+				div.panel.panel(class="panel-"+cls)
+					div.panel-heading
+						img(src=gravatar(comment.author.email))
+						span.pull-right
+							abbr(title=comment.date)
+								span= moment(comment.date).fromNow()
+							span &nbsp;
+							span.badge= comment._revision_number
+						span &nbsp; #{comment.author.name}
+					pre.comment= comment.message
+		div.col-md-4
+			div.row
+				div.col-md-12.col-sm-6
+					pre.
+						git checkout #{data.branch}
+						git pull --rebase
+						git review --download #{data._number}
+				div.col-md-12.col-sm-6
+					pre.
+						git commit --all --amend
+						git review --no-rebase
