@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "body-parser": "~1.6.4",
-    "convict": "~0.4.2",
+    "convict": "~6.2.3",
     "express": "~4.8.4",
     "express-flash": "0.0.2",
     "express-session": "~1.7.5",
